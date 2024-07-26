@@ -9,9 +9,8 @@
 
 class Game {
   public:
-    inline Game(GLFWwindow* w) {
-      window.handle = w;
-      glfwGetWindowSize(w, &window.width, &window.height);
+    inline Game(Window w) {
+      window = w;
       projection = glm::ortho(0.0f, (float)window.width, (float)window.height, 0.0f, -1.0f, 1.0f);
     }
 
@@ -29,10 +28,7 @@ class Game {
     void windowResize(int width, int height);
 
   private:
-    struct {
-      GLFWwindow* handle;
-      int width, height;
-    } window;
+    Window window;
 
     int q = false;
 

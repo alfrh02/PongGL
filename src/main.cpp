@@ -3,7 +3,7 @@
 #include "graphics/window.h"
 #include "game.h"
 
-GLFWwindow* window = createWindow();
+Window window = createWindow();
 Game game(window);
 
 void mouseMove(GLFWwindow* window, double x, double y) {
@@ -30,20 +30,20 @@ void processFramebufferSize(GLFWwindow* window, int width, int height) {
 }
 
 int main() {
-  if (window == NULL) {
+  if (window.handle == NULL) {
     printf("Failed to initialise GLFWwindow\n");
     glfwTerminate();
     return -1;
   }
 
-  setWindowCallbacks(window, mouseMove, mouseScroll, processMouse, processKeyboard, processFramebufferSize);
+  setWindowCallbacks(window.handle, mouseMove, mouseScroll, processMouse, processKeyboard, processFramebufferSize);
 
   game.setup();
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(window.handle)) {
     glfwPollEvents();
     game.update(glfwGetTime());
     game.render();
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(window.handle);
   }
 
   glfwTerminate();

@@ -1,6 +1,6 @@
 #include "window.h"
 
-GLFWwindow* createWindow() {
+Window createWindow() {
   glfwInit();
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -10,14 +10,18 @@ GLFWwindow* createWindow() {
   glfwWindowHintString(GLFW_X11_CLASS_NAME, "floating"); // for my dwm setup specifically
   glfwSwapInterval(1);
 
-  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game Template", NULL, NULL);
-  glfwMakeContextCurrent(window);
+  GLFWwindow* handle = glfwCreateWindow(WIDTH, HEIGHT, "Game Template", NULL, NULL);
+  glfwMakeContextCurrent(handle);
 
   if (gladLoadGL(glfwGetProcAddress) == 0) {
       printf("Failed to load GLAD\n");
   }
 
   glViewport(0, 0, WIDTH, HEIGHT);
+
+  Window window;
+  window.handle = handle;
+  glfwGetWindowSize(handle, &window.width, &window.height);
 
   return window;
 }

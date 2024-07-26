@@ -10,10 +10,10 @@
 
 struct Window {
   GLFWwindow* handle;
-  ushort width, height;
+  int width, height;
 };
 
-GLFWwindow* createWindow();
+Window createWindow();
 void setWindowCallbacks(GLFWwindow* window, GLFWcursorposfun mousePosCallback, GLFWscrollfun scrollCallback, GLFWmousebuttonfun mouseButtonCallback, GLFWkeyfun keyboardCallback, GLFWframebuffersizefun framebufferSizeCallback);
 
 #endif /* WINDOW_H */
