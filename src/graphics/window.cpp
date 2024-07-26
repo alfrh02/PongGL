@@ -1,0 +1,31 @@
+#include "window.h"
+
+GLFWwindow* createWindow() {
+  glfwInit();
+
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+  glfwWindowHintString(GLFW_X11_CLASS_NAME, "floating"); // for my dwm setup specifically
+  glfwSwapInterval(1);
+
+  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game Template", NULL, NULL);
+  glfwMakeContextCurrent(window);
+
+  if (gladLoadGL(glfwGetProcAddress) == 0) {
+      printf("Failed to load GLAD\n");
+  }
+
+  glViewport(0, 0, WIDTH, HEIGHT);
+
+  return window;
+}
+
+void setWindowCallbacks(GLFWwindow* window, GLFWcursorposfun mousePosCallback, GLFWscrollfun scrollCallback, GLFWmousebuttonfun mouseButtonCallback, GLFWkeyfun keyboardCallback, GLFWframebuffersizefun framebufferSizeCallback) {
+  glfwSetKeyCallback(window, keyboardCallback);
+  glfwSetCursorPosCallback(window, mousePosCallback);
+  glfwSetMouseButtonCallback(window, mouseButtonCallback);
+  glfwSetScrollCallback(window, scrollCallback);
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+}
