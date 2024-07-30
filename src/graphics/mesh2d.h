@@ -5,9 +5,16 @@
 #include <glm/gtc/matrix_transform.hpp> // translate, scale, rotate
 #include "shader.h"
 
+struct Texture {
+  uint        handle;
+  std::string filepath;
+};
+
 class Mesh2D {
   public:
     void draw(Shader& shader, int drawMode = GL_TRIANGLES);
+
+    void loadTexture(std::string filepath);
 
     void setPosition(glm::vec2 position);
     void setRotation(float degrees);
@@ -20,10 +27,11 @@ class Mesh2D {
   protected:
     glm::vec2 m_Position;
     float m_Rotation; // degrees
-    float m_Size;
+    float m_Size; // pixels
+    uint m_IndexAmount; // needed for glDrawElements
+    Texture m_Texture;
 
     uint m_VAO, m_VBO, m_EBO;
-    uint m_IndexAmount;
 };
 
 #endif /* MESH2D_H */

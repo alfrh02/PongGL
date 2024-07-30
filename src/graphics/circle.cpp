@@ -1,11 +1,13 @@
 #include "circle.h"
 
 #define PI     3.14159265359
-#define TWO_PI 3.14159265359*2
+#define TWO_PI (3.14159265359*2)
 
 Circle::Circle(glm::vec2 position, ushort resolution, float size) {
   m_Position = position;
   m_Size = size;
+
+  glGenTextures(1, &m_Texture.handle);
 
   glGenBuffers(1, &m_VBO);
   glGenBuffers(1, &m_EBO);

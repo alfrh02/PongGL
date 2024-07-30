@@ -4,6 +4,8 @@ Square::Square(glm::vec2 position, float size) {
   m_Position = position;
   m_Size = size;
 
+  glGenTextures(1, &m_Texture.handle);
+
   glGenBuffers(1, &m_VBO);
   glGenBuffers(1, &m_EBO);
 

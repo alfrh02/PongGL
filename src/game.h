@@ -6,6 +6,7 @@
 #include "graphics/window.h"
 #include "graphics/shader.h"
 #include "graphics/circle.h"
+#include "graphics/square.h"
 
 class Game {
   public:
@@ -30,14 +31,15 @@ class Game {
   private:
     Window window;
 
-    int q = false;
+    bool q = false;
 
     glm::mat4 projection;
 
     Shader shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
     Shader shader2 = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
 
-    Circle box = Circle(glm::vec2(0.0, 0.0), 6, 50);
+    //Circle box = Circle(glm::vec2(0.0, 0.0), 6, 50);
+    Square box = Square(glm::vec2(0.0));
 };
 
 #endif /* GAME_H */
