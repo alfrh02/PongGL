@@ -4,9 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "graphics/window.h"
-#include "graphics/shader.h"
-#include "graphics/circle.h"
-#include "graphics/square.h"
+#include "entity/entity.h"
 
 class Game {
   public:
@@ -16,7 +14,7 @@ class Game {
     }
 
     void setup();
-    void update(double deltaTime);
+    void update(double time, double deltaTime);
     void render();
 
     void mouseMove(double x, double y);
@@ -36,10 +34,9 @@ class Game {
     glm::mat4 projection;
 
     Shader shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
-    Shader shader2 = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
+    Shader shader2 = Shader("assets/shaders/vert.vert", "assets/shaders/flatcolor.frag");
 
-    //Circle box = Circle(glm::vec2(0.0, 0.0), 6, 50);
-    Square box = Square(glm::vec2(0.0));
+    Entity entity = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, 25), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 };
 
 #endif /* GAME_H */

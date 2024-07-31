@@ -2,26 +2,27 @@
 
 void Game::setup() {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  box.setPosition(glm::vec2(100, 100));
-  box.loadTexture("assets/textures/concrete.png");
+  entity.setPosition(glm::vec2(100, 100));
   shader.use();
   shader.setMat4("u_Projection", projection);
-  shader.setVec2("u_WindowDimensions", glm::vec2(window.width, window.height));
   shader2.use();
 }
 
-void Game::update(double deltaTime) {
-
+void Game::update(double time, double deltaTime) {
+  entity.setColor(glm::vec4(sin(time), cos(time), sin(deltaTime/2), 1.0f));
+  //entity.setDirection(glm::vec2(sin(time), cos(time)));
+  entity.update(deltaTime);
 }
 
 void Game::render() {
   glClear(GL_COLOR_BUFFER_BIT);
   shader.use();
   shader.setInt("u_Texture", 0);
-  if (q) {
-    box.draw(shader, GL_POINTS);
+  if (!q) {
+    entity.draw(shader);
   } else {
-    box.draw(shader, GL_TRIANGLES);
+    entity.draw(shader);
+    entity.drawDebug(shader);
   }
 }
 
@@ -34,7 +35,9 @@ void Game::mouseScroll(double xoff, double yoff) {
 }
 
 void Game::mousePress(int button, int mods) {
-
+  double x, y;
+  glfwGetCursorPos(window.handle, &x, &y);
+  entity.setDirection(glm::vec2(x, y) - entity.getPosition());
 }
 
 void Game::mouseRelease(int button, int mods) {

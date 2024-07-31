@@ -1,37 +1,31 @@
 #ifndef MESH2D_H
 #define MESH2D_H
 
+#include <vector>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp> // translate, scale, rotate
 #include "shader.h"
 
-struct Texture {
-  uint        handle;
-  std::string filepath;
+enum MeshType {
+  SQUARE = 0,
+  CIRCLE
 };
 
 class Mesh2D {
   public:
+    Mesh2D(MeshType type, ushort resolution = 32, float size = 100); // resolution is only for when type is CIRCLE
+
     void draw(Shader& shader, int drawMode = GL_TRIANGLES);
 
-    void loadTexture(std::string filepath);
+    void setTexture(std::string filepath);
 
-    void setPosition(glm::vec2 position);
-    void setRotation(float degrees);
-    void setSize(float size);
-
-    glm::vec2 getPosition();
-    float     getRotation();
-    float     getSize();
+    void  setSize(float size);
+    float getSize();
 
   protected:
-    glm::vec2 m_Position;
-    float m_Rotation; // degrees
-    float m_Size; // pixels
+    float m_Size;       // pixels
     uint m_IndexAmount; // needed for glDrawElements
-    Texture m_Texture;
 
-    uint m_VAO, m_VBO, m_EBO;
+    uint m_VAO, m_VBO, m_EBO, m_Texture; // opengl handles
 };
 
 #endif /* MESH2D_H */
