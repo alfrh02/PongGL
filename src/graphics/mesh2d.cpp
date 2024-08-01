@@ -3,10 +3,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#define PI     3.14159265359
-#define TWO_PI (3.14159265359*2)
+#define PI      3.14159265359
+#define TWO_PI  (3.14159265359*2)
+#define HALF_PI (3.14159265359/2)
 
-Mesh2D::Mesh2D(MeshType type, ushort resolution, float size) {
+Mesh2D::Mesh2D(MeshType type, ushort resolution, float width, float height) {
+  Mesh2D(type, resolution, glm::vec2(width, height));
+}
+
+Mesh2D::Mesh2D(MeshType type, ushort resolution, glm::vec2 size) {
   m_Size = size;
 
   glGenBuffers(1, &m_VBO);
@@ -21,11 +26,11 @@ Mesh2D::Mesh2D(MeshType type, ushort resolution, float size) {
   switch (type) {
     case SQUARE:
       vertices.insert(vertices.end(), {
-          // positions            // colors             // texture coords
-           0.5f,  0.5f, /* 0.0f,   1.0f, 0.0f, 0.0f, */  1.0f, 1.0f, // top right
-           0.5f, -0.5f, /* 0.0f,   0.0f, 1.0f, 0.0f, */  1.0f, 0.0f, // bottom right
-          -0.5f, -0.5f, /* 0.0f,   0.0f, 0.0f, 1.0f, */  0.0f, 0.0f, // bottom left
-          -0.5f,  0.5f, /* 0.0f,   1.0f, 1.0f, 0.0f, */  0.0f, 1.0f  // top left 
+      // positions  texture coords
+         0.5f,  0.5f, 1.0f, 1.0f, // top right
+         0.5f, -0.5f, 1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.0f, 1.0f  // top left 
       });
 
       indices.insert(indices.end(), {
@@ -49,15 +54,13 @@ Mesh2D::Mesh2D(MeshType type, ushort resolution, float size) {
         t += (1.0f/resolution) * TWO_PI;
       }
 
-      /*
-      for this kind of circle, indices are intuitive - view each triangle as a series of columns:
+   /* for this kind of circle, indices are intuitive - view each triangle as a series of columns:
       ushort indices[4*3] = {
         0, 1, 2,
         0, 2, 3,
         0, 3, 4,
         0, 4, 1
-      };
-      */
+      }; */
 
       for (ushort i = 0; i < resolution; i++) {
         indices.insert(indices.end(), {
@@ -124,10 +127,10 @@ void Mesh2D::setTexture(std::string filepath) {
   stbi_image_free(data);
 }
 
-void Mesh2D::setSize(float size) {
+void Mesh2D::setSize(glm::vec2 size) {
   m_Size = size;
 }
 
-float Mesh2D::getSize() {
+glm::vec2 Mesh2D::getSize() {
   return m_Size;
 }

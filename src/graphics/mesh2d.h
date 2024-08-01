@@ -12,17 +12,18 @@ enum MeshType {
 
 class Mesh2D {
   public:
-    Mesh2D(MeshType type, ushort resolution = 32, float size = 100); // resolution is only for when type is CIRCLE
+    Mesh2D(MeshType type, ushort resolution, glm::vec2 size); // resolution is only for when type is CIRCLE
+    Mesh2D(MeshType type, ushort resolution = 32, float width = 100, float height = 100);
 
     void draw(Shader& shader, int drawMode = GL_TRIANGLES);
 
     void setTexture(std::string filepath);
 
-    void  setSize(float size);
-    float getSize();
+    void setSize(glm::vec2 size);
+    glm::vec2 getSize();
 
   protected:
-    float m_Size;       // pixels
+    glm::vec2 m_Size;   // pixels width & height
     uint m_IndexAmount; // needed for glDrawElements
 
     uint m_VAO, m_VBO, m_EBO, m_Texture; // opengl handles

@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <vector>
 #include "graphics/window.h"
 #include "entity/entity.h"
 
@@ -36,7 +37,11 @@ class Game {
     Shader shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
     Shader shader2 = Shader("assets/shaders/vert.vert", "assets/shaders/flatcolor.frag");
 
-    Entity entity = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, 25), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Entity ball = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, glm::vec2(15.0f)), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Entity paddleLeft  = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, 150)));
+    Entity paddleRight = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, 150)));
+
+    std::vector<Entity> entities;
 };
 
 #endif /* GAME_H */
