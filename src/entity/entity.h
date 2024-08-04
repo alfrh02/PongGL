@@ -3,6 +3,7 @@
 
 #include "../graphics/mesh2d.h"
 #include <glm/gtc/matrix_transform.hpp> // translate, scale, rotate
+#include "../graphics/utils.h" // drawLine()
 
 class Entity {
   public:
@@ -16,31 +17,31 @@ class Entity {
     void checkCollision(Entity& entity);
 
     void setPosition(glm::vec2 position);
+    void setPosition(float x, float y);
     void setDirection(glm::vec2 direction);
     void setDirection(float x, float y);
     void setRotation(float degrees);
+    void setScale(glm::vec2 scale);
+    void setSpeed(float speed);
     void setColor(glm::vec4 color);
 
     glm::vec2 getPosition();
     glm::vec2 getDirection();
-    glm::vec2 getSize();
     float     getRotation();
+    glm::vec2 getSize(); // m_Mesh.size multiplied by m_Scale
     glm::vec4 getColor();
 
   private:
-    static void drawLine(glm::vec2 start, glm::vec2 end);
-    //static void drawAABB(glm::vec2 pos, glm::vec2 scale);
-
     glm::vec2 m_Position;
     glm::vec2 m_Direction;
-    float m_Rotation; // degrees
-    glm::vec2 m_Scale;    // pixels
-    float m_Speed;    // pixels per second
+    float m_Rotation;  // degrees
+    glm::vec2 m_Scale; // pixels
+    float m_Speed;     // pixels per second
 
     Mesh2D* m_Mesh;
     glm::vec4 m_Color;
-
-    //BoundingBox m_BoundingBox;
 };
+
+void test();
 
 #endif /* ENTITY_H */

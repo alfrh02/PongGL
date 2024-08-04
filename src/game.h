@@ -7,6 +7,10 @@
 #include "graphics/window.h"
 #include "entity/entity.h"
 
+#define PADDLE_SIZE  60
+#define PADDLE_SPEED 250.0f
+#define BALL_SPEED   300.0f
+
 class Game {
   public:
     inline Game(Window w) {
@@ -15,7 +19,7 @@ class Game {
     }
 
     void setup();
-    void update(double time, double deltaTime);
+    void update(double time, double deltaTime, unsigned long long frameCount);
     void render();
 
     void mouseMove(double x, double y);
@@ -27,21 +31,26 @@ class Game {
 
     void windowResize(int width, int height);
 
+    void resetBall(Entity& entity, bool left);
+
   private:
     Window window;
 
-    bool q = false;
+    bool debug = false;
 
     glm::mat4 projection;
 
     Shader shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
-    Shader shader2 = Shader("assets/shaders/vert.vert", "assets/shaders/flatcolor.frag");
 
-    Entity ball = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, glm::vec2(15.0f)), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    Entity paddleLeft  = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, 150)));
-    Entity paddleRight = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, 150)));
+    struct Player {
+      Entity paddle = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, PADDLE_SIZE)));
+      ushort score = 0;
+    };
 
-    std::vector<Entity> entities;
+    Player leftPlayer;
+    Player rightPlayer;
+
+    Entity ball = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, glm::vec2(15.0f)));
 };
 
 #endif /* GAME_H */

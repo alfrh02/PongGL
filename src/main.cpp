@@ -39,13 +39,15 @@ int main() {
   setWindowCallbacks(window.handle, mouseMove, mouseScroll, processMouse, processKeyboard, processFramebufferSize);
 
   double oldTime = 0.0;
+  unsigned long long frameCount = 0;
   game.setup();
   while (!glfwWindowShouldClose(window.handle)) {
     glfwPollEvents();
-    game.update(glfwGetTime(), glfwGetTime() - oldTime);
+    game.update(glfwGetTime(), glfwGetTime() - oldTime, frameCount);
     oldTime = glfwGetTime();
     game.render();
     glfwSwapBuffers(window.handle);
+    frameCount++;
   }
 
   glfwTerminate();

@@ -47,27 +47,40 @@ void Entity::checkCollision(Entity& entity) {
   glm::vec2 ehalfsize = esize / glm::vec2(2);
 
   glm::vec2 halfsize = getSize() / glm::vec2(2);
-  // check if our y is within the height of entity
+
   if (m_Position.y + halfsize.y > epos.y - ehalfsize.y && m_Position.y - halfsize.y < epos.y + ehalfsize.y) {
-    // check if our x is within the width of the entity
     if (m_Position.x + halfsize.x > epos.x - ehalfsize.x && m_Position.x - halfsize.x < epos.x + ehalfsize.x) {
       glm::vec2 dir = glm::normalize((m_Position - epos) / esize);
       float angle = std::atan2(dir.x, dir.y) - (HALF_PI / 2);
-      if (angle > 0 && angle < HALF_PI) { // colliding on the right side
-        m_Direction.x = -m_Direction.x;
-      } else if (angle < 0 && angle > -HALF_PI) { // bottom side
-        m_Direction.y = -m_Direction.y;
-      } else if (angle < -HALF_PI && angle > -PI) { // left side
-        m_Direction.x = -m_Direction.x;
-      } else { // top side
-        m_Direction.y = -m_Direction.y;
+
+      /*
+      if (angle > 0 && angle <= HALF_PI) {
+        std::cout << angle << " right" << std::endl;
+      } else if (angle > -HALF_PI && angle <= 0) {
+        std::cout << angle << " bottom" << std::endl;
+      } else if (angle > -PI && angle <= -HALF_PI) {
+        std::cout << angle << " left" << std::endl;
+      } else {
+        std::cout << angle << " top" << std::endl;
       }
+      */
+
+      if ((angle > 0 && angle <= HALF_PI) || (angle > -PI && angle <= -HALF_PI)) {
+        m_Direction.x = -m_Direction.x; // left & right
+      } else if ((angle > -HALF_PI && angle <= 0)) {
+        m_Direction.y = -m_Direction.y; // top & bottom
+      }
+      setDirection(m_Direction + dir);
     }
   }
 }
 
 void Entity::setPosition(glm::vec2 position) {
   m_Position = position;
+}
+
+void Entity::setPosition(float x, float y) {
+  m_Position = glm::vec2(x, y);
 }
 
 void Entity::setDirection(glm::vec2 direction) {
@@ -80,6 +93,17 @@ void Entity::setDirection(float x, float y) {
 
 void Entity::setRotation(float degrees) {
   m_Rotation = degrees;
+}
+
+void Entity::setScale(glm::vec2 scale) {
+  m_Scale = scale;
+}
+
+void Entity::setSpeed(float speed) {
+  if (speed < 0) {
+    speed = abs(speed);
+  }
+  m_Speed = speed;
 }
 
 void Entity::setColor(glm::vec4 color) {
@@ -104,28 +128,4 @@ float Entity::getRotation() {
 
 glm::vec4 Entity::getColor() {
   return m_Color;
-}
-
-void Entity::drawLine(glm::vec2 start, glm::vec2 end) {
-  float vertices[4] = {
-    start.x, start.y,
-    end.x,   end.y
-  };
-
-  uint vbo, vao;
-  glGenVertexArrays(1, &vao);
-  glGenBuffers(1, &vbo);
-
-  glBindVertexArray(vao);
-
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-
-  glDrawArrays(GL_LINES, 0, 4);
-
-  glDeleteVertexArrays(1, &vao);
-  glDeleteBuffers(1, &vbo);
 }
