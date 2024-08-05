@@ -1,9 +1,5 @@
 #include "entity.h"
 
-#define PI      3.14159265359
-#define TWO_PI  (3.14159265359*2)
-#define HALF_PI (3.14159265359/2)
-
 Entity::Entity(glm::vec2 position, Mesh2D mesh, glm::vec4 color) {
   m_Position = position;
   m_Direction = glm::vec2(0.0f);
@@ -84,11 +80,14 @@ void Entity::setPosition(float x, float y) {
 }
 
 void Entity::setDirection(glm::vec2 direction) {
-  m_Direction = glm::normalize(direction);
+  setDirection(direction.x, direction.y);
 }
 
 void Entity::setDirection(float x, float y) {
   m_Direction = glm::normalize(glm::vec2(x, y));
+  if (x == 0 && y == 0) {
+    m_Direction = glm::vec2(x, y);
+  }
 }
 
 void Entity::setRotation(float degrees) {

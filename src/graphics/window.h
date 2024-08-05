@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <iostream>
-#include <glad/include/glad/gl.h>
+#include <glad/include/glad/glad.h>
 #include <glfw/include/GLFW/glfw3.h>
 
 #define WIDTH  800

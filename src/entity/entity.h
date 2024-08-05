@@ -42,6 +42,4 @@ class Entity {
     glm::vec4 m_Color;
 };
 
-void test();
-
 #endif /* ENTITY_H */

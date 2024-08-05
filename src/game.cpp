@@ -1,10 +1,8 @@
 #include "game.h"
 
-#define PI       3.14159265359
-#define TWO_PI  (3.14159265359*2)
-#define HALF_PI (3.14159265359/2)
-
 void Game::setup() {
+  glfwSetInputMode(window.handle, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   ball.setPosition(window.width/2, window.height/2);
   ball.setDirection(1.0f, 0.0f);
@@ -20,6 +18,16 @@ void Game::setup() {
   shader.setMat4("u_Projection", projection);
 }
 
+Game::~Game() {
+  if (leftPlayer.score > rightPlayer.score) {
+    std::cout << "Left Player wins!" << std::endl;
+  } else if (leftPlayer.score < rightPlayer.score) {
+    std::cout << "Right Player wins!" << std::endl;
+  } else {
+    std::cout << "Tie!" << std::endl;
+  }
+}
+
 void Game::update(double time, double deltaTime, unsigned long long frameCount) {
   ball.update(deltaTime);
 
@@ -27,15 +35,19 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
   rightPlayer.paddle.update(deltaTime);
 
   if (leftPlayer.paddle.getPosition().y > window.height-(PADDLE_SIZE/2)) {
+    leftPlayer.paddle.setDirection(0.0f, 0.0f);
     leftPlayer.paddle.setPosition(leftPlayer.paddle.getPosition().x, window.height-(PADDLE_SIZE/2));
   } else if (leftPlayer.paddle.getPosition().y < PADDLE_SIZE/2) {
     leftPlayer.paddle.setPosition(leftPlayer.paddle.getPosition().x, PADDLE_SIZE/2);
+    leftPlayer.paddle.setDirection(0.0f, 0.0f);
   }
 
   if (rightPlayer.paddle.getPosition().y > window.height-(PADDLE_SIZE/2)) {
     rightPlayer.paddle.setPosition(rightPlayer.paddle.getPosition().x, window.height-(PADDLE_SIZE/2));
+    rightPlayer.paddle.setDirection(0.0f, 0.0f);
   } else if (rightPlayer.paddle.getPosition().y < PADDLE_SIZE/2) {
     rightPlayer.paddle.setPosition(rightPlayer.paddle.getPosition().x, PADDLE_SIZE/2);
+    rightPlayer.paddle.setDirection(0.0f, 0.0f);
   }
 
   glm::vec2 bpos  = ball.getPosition();
@@ -47,11 +59,11 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
   }
 
   if (bpos.x < 0 + (bsize.x/2)) {
-    leftPlayer.score++;
+    rightPlayer.score++;
     resetBall(ball, true);
     std::cout << leftPlayer.score << " - " << rightPlayer.score << std::endl;
   } else if (bpos.x + (bsize.x/2) > window.width) {
-    rightPlayer.score++;
+    leftPlayer.score++;
     resetBall(ball, false);
     std::cout << leftPlayer.score << " - " << rightPlayer.score << std::endl;
   }

@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <glad/include/glad/gl.h>
+#include <glad/include/glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 

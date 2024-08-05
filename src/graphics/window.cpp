@@ -3,8 +3,8 @@
 Window createWindow() {
   glfwInit();
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
   glfwWindowHintString(GLFW_X11_CLASS_NAME, "floating"); // for my dwm setup specifically
@@ -13,7 +13,7 @@ Window createWindow() {
   GLFWwindow* handle = glfwCreateWindow(WIDTH, HEIGHT, "Game Template", NULL, NULL);
   glfwMakeContextCurrent(handle);
 
-  if (gladLoadGL(glfwGetProcAddress) == 0) {
+  if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 0) {
       printf("Failed to load GLAD\n");
   }
 

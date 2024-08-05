@@ -17,6 +17,7 @@ class Game {
       window = w;
       projection = glm::ortho(0.0f, (float)window.width, (float)window.height, 0.0f, -1.0f, 1.0f);
     }
+    ~Game();
 
     void setup();
     void update(double time, double deltaTime, unsigned long long frameCount);
