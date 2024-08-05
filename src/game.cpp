@@ -68,6 +68,32 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
     std::cout << leftPlayer.score << " - " << rightPlayer.score << std::endl;
   }
 
+  int fps = (frameCount+1)/time;
+  fps *= AI_FRAMERATE;
+  if ((frameCount % fps) / (fps-1)) {
+    if (bdir.x > 0.0) {
+      if (rightPlayer.paddle.getPosition().y > bpos.y) {
+        rightPlayer.paddle.setDirection(glm::vec2(0.0f, -1.0f));
+      } else if (rightPlayer.paddle.getPosition().y < bpos.y) {
+        rightPlayer.paddle.setDirection(glm::vec2(0.0f, 1.0f));
+      } else {
+        rightPlayer.paddle.setDirection(glm::vec2(0));
+      }
+    #ifndef AI_CENTRES_SELF
+    } else {
+      rightPlayer.paddle.setDirection(glm::vec2(0));
+    }
+    #else
+    } else {
+      if (rightPlayer.paddle.getPosition().y > window.height/2) {
+        rightPlayer.paddle.setDirection(glm::vec2(0.0f, -1.0f));
+      } else if (rightPlayer.paddle.getPosition().y < window.height/2) {
+        rightPlayer.paddle.setDirection(glm::vec2(0.0f, 1.0f));
+      }
+    }
+    #endif
+  }
+
   ball.checkCollision(leftPlayer.paddle);
   ball.checkCollision(rightPlayer.paddle);
 }
@@ -75,6 +101,9 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
 void Game::render() {
   glClear(GL_COLOR_BUFFER_BIT);
   shader.use();
+  shader.setMat4("u_Model", glm::mat4(1.0f));
+  shader.setVec4("u_Color", glm::vec4(1.0f));
+  drawLine(glm::vec2(window.width/2, 0), glm::vec2(window.width/2, window.height));
   shader.setInt("u_Texture", 0);
   ball.draw(shader);
   leftPlayer.paddle.draw(shader);
@@ -137,7 +166,7 @@ void Game::windowResize(int width, int height) {
 };
 
 void Game::resetBall(Entity& entity, bool left) {
-  entity.setPosition(window.width/2, window.height/2);
+  entity.setPosition(window.width/2, window.height/2 - RESET_MARGIN + (float)(rand() % (RESET_MARGIN*2)));
   if (left) {
     entity.setDirection((float)(rand() % 100) * -1, (float)(rand() % 100));
   } else {

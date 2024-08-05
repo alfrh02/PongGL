@@ -10,6 +10,18 @@
 #define PADDLE_SIZE  60
 #define PADDLE_SPEED 250.0f
 #define BALL_SPEED   300.0f
+#define RESET_MARGIN 200
+
+// EASY
+//#define AI_FRAMERATE 0.3
+
+// MEDIUM
+//#define AI_FRAMERATE 0.2
+//#define AI_CENTRES_SELF
+
+// HARD
+#define AI_FRAMERATE 0.1
+#define AI_CENTRES_SELF
 
 class Game {
   public:
