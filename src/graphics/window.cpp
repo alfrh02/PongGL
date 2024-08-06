@@ -7,10 +7,9 @@ Window createWindow() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-  glfwWindowHintString(GLFW_X11_CLASS_NAME, "floating"); // for my dwm setup specifically
   glfwSwapInterval(1);
 
-  GLFWwindow* handle = glfwCreateWindow(WIDTH, HEIGHT, "Game Template", NULL, NULL);
+  GLFWwindow* handle = glfwCreateWindow(WIDTH, HEIGHT, "Pong", NULL, NULL);
   glfwMakeContextCurrent(handle);
 
   if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 0) {

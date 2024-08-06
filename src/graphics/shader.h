@@ -17,6 +17,7 @@ class Shader {
     void use();
 
     void setInt(std::string u_Name, int value);
+    void setFloat(std::string u_Name, float value);
     void setMat4(std::string u_Name, glm::mat4 value);
     void setVec4(std::string u_Name, glm::vec4 value);
     void setVec2(std::string u_Name, glm::vec2 value);

@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "shader.h"
+#include "utils.h"
 
 enum MeshType {
   SQUARE = 0,
@@ -14,12 +15,12 @@ class Mesh2D {
   public:
     Mesh2D(MeshType type, ushort resolution, glm::vec2 size); // resolution is only for when type is CIRCLE
     Mesh2D(MeshType type, ushort resolution = 32, float width = 100, float height = 100);
+    ~Mesh2D();
 
     void draw(Shader& shader, int drawMode = GL_TRIANGLES);
 
-    void setTexture(std::string filepath);
-
     void setSize(glm::vec2 size);
+    void setTexture(std::string filepath);
     glm::vec2 getSize();
 
   protected:

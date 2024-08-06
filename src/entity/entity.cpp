@@ -31,9 +31,8 @@ void Entity::draw(Shader& shader, int drawMode) {
 }
 
 void Entity::drawDebug(Shader& shader) {
-  shader.setMat4("u_Model", glm::mat4(1.0f));
-  shader.setVec4("u_Color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-  drawLine(m_Position, m_Position + glm::vec2(m_Direction.x * 20, m_Direction.y * 20));
+  drawLine(shader, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), m_Position, m_Position + glm::vec2(m_Direction.x * 20, m_Direction.y * 20));
+  draw(shader);
 }
 
 void Entity::checkCollision(Entity& entity) {
@@ -109,8 +108,16 @@ void Entity::setColor(glm::vec4 color) {
   m_Color = color;
 }
 
+void Entity::setTexture(std::string filepath) {
+  m_Mesh->setTexture(filepath);
+}
+
 glm::vec2 Entity::getPosition() {
   return m_Position;
+}
+
+float Entity::getRotation() {
+  return m_Rotation;
 }
 
 glm::vec2 Entity::getDirection() {
@@ -121,8 +128,8 @@ glm::vec2 Entity::getSize() {
   return m_Mesh->getSize() * m_Scale;
 }
 
-float Entity::getRotation() {
-  return m_Rotation;
+float Entity::getSpeed() {
+  return m_Speed;
 }
 
 glm::vec4 Entity::getColor() {

@@ -59,6 +59,10 @@ void Shader::setInt(std::string u_Name, int value) {
   glUniform1i(glGetUniformLocation(m_ShaderProgram, u_Name.c_str()), value);
 }
 
+void Shader::setFloat(std::string u_Name, float value) {
+  glUniform1f(glGetUniformLocation(m_ShaderProgram, u_Name.c_str()), value);
+}
+
 void Shader::setMat4(std::string u_Name, glm::mat4 value) {
   glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, u_Name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

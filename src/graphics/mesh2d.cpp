@@ -1,14 +1,18 @@
 #include "mesh2d.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #define PI      3.14159265359
 #define TWO_PI  (3.14159265359*2)
 #define HALF_PI (3.14159265359/2)
 
-Mesh2D::Mesh2D(MeshType type, ushort resolution, float width, float height) {
-  Mesh2D(type, resolution, glm::vec2(width, height));
+Mesh2D::Mesh2D(MeshType type, ushort resolution, float width, float height)
+: Mesh2D(type, resolution, glm::vec2(width, height)) {
+}
+
+Mesh2D::~Mesh2D() {
+//  this causes a segfault and i dont know why
+//  glDeleteBuffers(1, &m_VBO);
+//  glDeleteBuffers(1, &m_EBO);
+//  glDeleteVertexArrays(1, &m_VAO);
 }
 
 Mesh2D::Mesh2D(MeshType type, ushort resolution, glm::vec2 size) {
@@ -95,40 +99,12 @@ void Mesh2D::draw(Shader& shader, int drawMode) {
   glBindVertexArray(0);
 }
 
-void Mesh2D::setTexture(std::string filepath) {
-  glGenTextures(1, &m_Texture);
-  glBindTexture(GL_TEXTURE_2D, m_Texture);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width, height, channels;
-  unsigned char *data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
-
-  uint mode = GL_RED;
-  switch (channels) {
-    case 3:
-      mode = GL_RGB;
-      break;
-    case 4:
-      mode = GL_RGB;
-      break;
-  }
-
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, mode, width, height, 0, mode, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else {
-    std::cout << "ERROR: Failed to load texture " << filepath << std::endl;
-  }
-
-  stbi_image_free(data);
-}
-
 void Mesh2D::setSize(glm::vec2 size) {
   m_Size = size;
+}
+
+void Mesh2D::setTexture(std::string filepath) {
+  loadImageTexture(m_Texture, filepath);
 }
 
 glm::vec2 Mesh2D::getSize() {

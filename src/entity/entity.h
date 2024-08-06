@@ -24,11 +24,13 @@ class Entity {
     void setScale(glm::vec2 scale);
     void setSpeed(float speed);
     void setColor(glm::vec4 color);
+    void setTexture(std::string filepath);
 
     glm::vec2 getPosition();
     glm::vec2 getDirection();
     float     getRotation();
     glm::vec2 getSize(); // m_Mesh.size multiplied by m_Scale
+    float     getSpeed();
     glm::vec4 getColor();
 
   private:

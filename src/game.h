@@ -6,28 +6,37 @@
 #include <vector>
 #include "graphics/window.h"
 #include "entity/entity.h"
+#include "scene/gamescene.h"
 
-#define PADDLE_SIZE  60
-#define PADDLE_SPEED 250.0f
-#define BALL_SPEED   300.0f
-#define RESET_MARGIN 200
+#define PADDLE_SIZE       60
+#define PADDLE_SPEED      250.0f
+#define BALL_SPEED        250.0f
+#define BALL_RESOLUTION   12
+#define BALL_WINDUP_SPEED 8 // amount of pixels BALL_SPEED increases by per second
+#define RESET_MARGIN      200
+
+// NO COMPUTER
+//#define NO_COMPUTER
 
 // EASY
 //#define AI_FRAMERATE 0.3
 
 // MEDIUM
-//#define AI_FRAMERATE 0.2
-//#define AI_CENTRES_SELF
+#define AI_FRAMERATE 0.15
+#define AI_CENTRES_SELF
 
 // HARD
-#define AI_FRAMERATE 0.1
-#define AI_CENTRES_SELF
+//#define AI_FRAMERATE 0.1
+//#define AI_CENTRES_SELF
+
+// IMPOSSIBLE
+//#define AI_FRAMERATE 0.1
+//#define AI_CENTRES_SELF
 
 class Game {
   public:
     inline Game(Window w) {
-      window = w;
-      projection = glm::ortho(0.0f, (float)window.width, (float)window.height, 0.0f, -1.0f, 1.0f);
+      m_Window = w;
     }
     ~Game();
 
@@ -44,26 +53,27 @@ class Game {
 
     void windowResize(int width, int height);
 
+  private:
     void resetBall(Entity& entity, bool left);
 
-  private:
-    Window window;
+    double m_Time, m_DeltaTime;
+    unsigned long long m_FrameCount;
 
-    bool debug = false;
+    Window m_Window;
 
-    glm::mat4 projection;
+    bool m_Debug = false, m_Paused = false, m_Rainbow = false;
 
-    Shader shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
+    Shader m_Shader = Shader("assets/shaders/vert.vert", "assets/shaders/frag.frag");
 
     struct Player {
       Entity paddle = Entity(glm::vec2(0), Mesh2D(SQUARE, 0, glm::vec2(10, PADDLE_SIZE)));
       ushort score = 0;
     };
 
-    Player leftPlayer;
-    Player rightPlayer;
+    Player m_LeftPlayer;
+    Player m_RightPlayer;
 
-    Entity ball = Entity(glm::vec2(0), Mesh2D(CIRCLE, 16, glm::vec2(15.0f)));
+    Entity m_Ball = Entity(glm::vec2(0), Mesh2D(CIRCLE, BALL_RESOLUTION, glm::vec2(15.0f)));
 };
 
 #endif /* GAME_H */
