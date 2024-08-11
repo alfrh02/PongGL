@@ -66,11 +66,11 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
     m_Ball.setDirection(bdir.x, -bdir.y);
   }
 
-  if (bpos.x < 0 + (bsize.x/2)) {
+  if (bpos.x < 0 - bsize.x) {
     m_RightPlayer.score++;
     resetBall(m_Ball, true);
     std::cout << m_LeftPlayer.score << " - " << m_RightPlayer.score << std::endl;
-  } else if (bpos.x + (bsize.x/2) > m_Window.width) {
+  } else if (bpos.x - bsize.x > m_Window.width) {
     m_LeftPlayer.score++;
     resetBall(m_Ball, false);
     std::cout << m_LeftPlayer.score << " - " << m_RightPlayer.score << std::endl;
@@ -79,7 +79,7 @@ void Game::update(double time, double deltaTime, unsigned long long frameCount) 
   #ifndef NO_COMPUTER
   int fps = (frameCount+1)/time;
   fps *= AI_FRAMERATE;
-  if ((frameCount % fps) / (fps-1)) {
+  if (((frameCount+1) % fps) / (fps-1)) {
     if (bdir.x > 0.0) {
       if (m_RightPlayer.paddle.getPosition().y > bpos.y) {
         m_RightPlayer.paddle.setDirection(glm::vec2(0.0f, -1.0f));
@@ -112,12 +112,12 @@ void Game::render() {
   glClear(GL_COLOR_BUFFER_BIT);
   m_Shader.use();
 
-  renderBitmapString(m_Shader, std::to_string(m_LeftPlayer.score),  glm::vec2(m_Window.width/4,                  m_Window.height/5), glm::vec4(glm::vec3(0.1f), 1.0f), glm::vec4(48.0f));
-  renderBitmapString(m_Shader, std::to_string(m_RightPlayer.score), glm::vec2(m_Window.width - m_Window.width/4, m_Window.height/5), glm::vec4(glm::vec3(0.1f), 1.0f), glm::vec4(48.0f));
+  renderBitmapString(m_Shader, std::to_string(m_LeftPlayer.score),  glm::vec2(m_Window.width/4,                  m_Window.height/5), glm::vec4(glm::vec3(0.1f), 1.0f), glm::vec2(48.0f));
+  renderBitmapString(m_Shader, std::to_string(m_RightPlayer.score), glm::vec2(m_Window.width - m_Window.width/4, m_Window.height/5), glm::vec4(glm::vec3(0.1f), 1.0f), glm::vec2(48.0f));
 
   m_Shader.setInt("u_Texture", 0);
   if (m_Debug) {
-    renderBitmapString(m_Shader, std::to_string(m_Time), glm::vec2(m_Window.width/2, m_Window.height/2), glm::vec4(1.0f));
+    renderBitmapString(m_Shader, std::to_string(m_Time), glm::vec2(m_Window.width/2, m_Window.height/2), glm::vec4(1.0f), glm::vec2(64.0f), 0.0f, false);
 
     m_Shader.setInt("u_Wireframe", 1);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
