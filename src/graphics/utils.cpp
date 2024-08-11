@@ -30,7 +30,10 @@ void drawLine(Shader& shader, glm::vec4 color, glm::vec2 start, glm::vec2 end) {
   glDeleteBuffers(1, &vbo);
 }
 
-void renderBitmapString(Shader& shader, std::string string, glm::vec2 position, glm::vec4 color, glm::vec2 scale, float rotation, bool centred) {
+/*
+ * Creates a quad & gives it appropriate tex coordinates for the letter it's supposed to display
+ */
+void drawBitmapString(Shader& shader, std::string string, glm::vec2 position, glm::vec4 color, glm::vec2 scale, float rotation, bool centred) {
   uint vbo, ebo, vao, texture;
   glGenBuffers(1, &vbo);
   glGenBuffers(1, &ebo);
@@ -43,8 +46,8 @@ void renderBitmapString(Shader& shader, std::string string, glm::vec2 position, 
 
   #define GLYPH_ROW_LENGTH 13
   #define GLYPHMAP_SIZE    104.0f
-  #define GLYPH_WIDTH      8/GLYPHMAP_SIZE
-  #define GLYPH_HEIGHT     12/GLYPHMAP_SIZE
+  #define GLYPH_WIDTH      8
+  #define GLYPH_HEIGHT     12
   #define GLYPH_RATIO      8.0f/12.0f
 
   for (int i = 0; i < string.length(); i++) {
@@ -57,14 +60,14 @@ void renderBitmapString(Shader& shader, std::string string, glm::vec2 position, 
 
     vertices.insert(vertices.end(), {
     // positions    texture coords
-    // 0.5f,  0.5f,  8.0f/104.0f * index.x,                 12.0f/104.0f * index.y,                 // top right
-    // 0.5f, -0.5f,  8.0f/104.0f * index.x,                (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom right
-    //-0.5f, -0.5f, (8.0f/104.0f * index.x) - GLYPH_WIDTH, (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom left
-    //-0.5f,  0.5f, (8.0f/104.0f * index.x) - GLYPH_WIDTH,  12.0f/104.0f * index.y                  // top left
-      i+0.5,  0.5,  8.0f/104.0f * index.x,                 12.0f/104.0f * index.y,                 // top right
-      i+0.5, -0.5,  8.0f/104.0f * index.x,                (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom right
-      i-0.5, -0.5, (8.0f/104.0f * index.x) - GLYPH_WIDTH, (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom left
-      i-0.5,  0.5, (8.0f/104.0f * index.x) - GLYPH_WIDTH,  12.0f/104.0f * index.y                  // top left
+      i+1, 1,  GLYPH_WIDTH/GLYPHMAP_SIZE * index.x,                               GLYPH_HEIGHT/GLYPHMAP_SIZE * index.y,                               // bottom left
+      i+1, 0,  GLYPH_WIDTH/GLYPHMAP_SIZE * index.x,                              (GLYPH_HEIGHT/GLYPHMAP_SIZE * index.y) - GLYPH_HEIGHT/GLYPHMAP_SIZE, // top left
+      i,   0, (GLYPH_WIDTH/GLYPHMAP_SIZE * index.x) - GLYPH_WIDTH/GLYPHMAP_SIZE, (GLYPH_HEIGHT/GLYPHMAP_SIZE * index.y) - GLYPH_HEIGHT/GLYPHMAP_SIZE, // top right
+      i,   1, (GLYPH_WIDTH/GLYPHMAP_SIZE * index.x) - GLYPH_WIDTH/GLYPHMAP_SIZE,  GLYPH_HEIGHT/GLYPHMAP_SIZE * index.y                                // bottom right
+    //i+0.5,  0.5,  8.0f/104.0f * index.x,                 12.0f/104.0f * index.y,                 // top right
+    //i+0.5, -0.5,  8.0f/104.0f * index.x,                (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom right
+    //i-0.5, -0.5, (8.0f/104.0f * index.x) - GLYPH_WIDTH, (12.0f/104.0f * index.y) - GLYPH_HEIGHT, // bottom left
+    //i-0.5,  0.5, (8.0f/104.0f * index.x) - GLYPH_WIDTH,  12.0f/104.0f * index.y                  // top left
     });
 
     ushort v = i*4;
@@ -72,6 +75,25 @@ void renderBitmapString(Shader& shader, std::string string, glm::vec2 position, 
       v,   v+1, v+3,
       v+1, v+2, v+3
     });
+  }
+
+  if (centred) {
+    // grabs each vertex position from `vertices` & shifts it to be centred
+    // 0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21
+    for (ushort i = 0; i < vertices.size(); i += 4) {
+      vertices[i]   -= 0.5;
+      vertices[i+1] -= 0.5;
+    }
+
+    // shifts each quad leftwards
+    for (ushort i = 0; i < vertices.size(); i += 16) {
+      //std::cout << i << std::endl;
+      for (ushort j = i; j < i+16; j += 4) {
+        //std::cout << j << std::endl;
+        vertices[j] -= string.length()/2;
+        if (!(string.length() % 2)) vertices[j] += 0.5;
+      }
+    }
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -91,13 +113,8 @@ void renderBitmapString(Shader& shader, std::string string, glm::vec2 position, 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  position -= glm::vec2(string.length()*GLYPH_WIDTH*GLYPHMAP_SIZE, 0.0);
-
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model, glm::vec3(position, 0.0f));
-//if (centred) {
-//  model = glm::translate(model, glm::vec3(-(string.length()*GLYPH_WIDTH / 2), -(GLYPH_HEIGHT / 2), 0.0f));
-//}
   model = glm::scale(model, glm::vec3(scale.x * GLYPH_RATIO, scale.y, 1.0f));
   model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
   shader.setMat4("u_Model", model);

@@ -56,8 +56,10 @@ class Game {
   private:
     void resetBall(Entity& entity, bool left);
 
-    double m_Time, m_DeltaTime;
+    double m_Time, m_DeltaTime, m_TimeCapt = 0;
     unsigned long long m_FrameCount;
+    float m_FPS;
+    int m_TimeCaptFrameCount = 0;
 
     Window m_Window;
 
